@@ -1,0 +1,63 @@
+{
+  "name": "snippet-fidelity",
+  "version": "0.1.0",
+  "description": "Source-to-clipboard fidelity checks for rendered documentation code blocks.",
+  "type": "module",
+  "bin": {
+    "snippet-fidelity": "./dist/cli.js"
+  },
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist",
+    "docs",
+    "examples",
+    "fixtures",
+    "schema",
+    "scripts",
+    "CHANGELOG.md",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json",
+    "fixture": "node scripts/serve-fixture.mjs",
+    "fixture:verify": "node scripts/verify-fixture.mjs",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "test": "vitest run",
+    "test:e2e": "vitest run tests/audit.e2e.test.ts",
+    "verify": "pnpm format:check && pnpm typecheck && pnpm test && pnpm build && npm pack --dry-run"
+  },
+  "keywords": [
+    "clipboard",
+    "documentation",
+    "playwright",
+    "testing",
+    "code-blocks"
+  ],
+  "license": "MIT",
+  "engines": {
+    "node": ">=22"
+  },
+  "packageManager": "pnpm@10.18.0",
+  "publishConfig": {
+    "access": "public"
+  },
+  "dependencies": {
+    "playwright": "^1.62.1"
+  },
+  "devDependencies": {
+    "@types/node": "^24.10.0",
+    "prettier": "^3.8.1",
+    "typescript": "^5.9.3",
+    "vitest": "^4.0.17"
+  }
+}

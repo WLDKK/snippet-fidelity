@@ -1,0 +1,26 @@
+{
+  "good-unicode": {
+    "source": "printf '你好 👋 — café'",
+    "transform": "identity"
+  },
+  "trailing-newline": {
+    "source": "npm install safe-package",
+    "transform": "append-newline"
+  },
+  "indentation-loss": {
+    "source": "if (ready) {\n\tlaunch();\n}",
+    "transform": "trim-indentation"
+  },
+  "tabs-to-spaces": {
+    "source": "root\n\tchild",
+    "transform": "tabs-to-spaces"
+  },
+  "zero-width-injection": {
+    "source": "const token = 'safe';",
+    "transform": "inject-zero-width"
+  },
+  "unicode-normalization": {
+    "source": "const label = 'café';",
+    "transform": "normalize-nfd"
+  }
+}

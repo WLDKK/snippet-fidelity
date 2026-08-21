@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Snippet Fidelity adversarial fixture</title>
+    <style>
+      body {
+        margin: 2rem auto;
+        max-width: 60rem;
+        padding: 0 1rem;
+        font-family: system-ui, sans-serif;
+      }
+      .snippet {
+        position: relative;
+        margin: 1rem 0;
+      }
+      pre {
+        overflow: auto;
+        padding: 1rem;
+        background: #111827;
+        color: #f9fafb;
+      }
+      button {
+        position: absolute;
+        right: 0.5rem;
+        top: 0.5rem;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Adversarial clipboard fixtures</h1>
+    <p>Only the first case is intentionally correct. Every other case simulates a regression.</p>
+    <main id="fixtures"></main>
+    <script type="module" src="/fixture.js"></script>
+  </body>
+</html>

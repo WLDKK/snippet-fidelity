@@ -1,0 +1,24 @@
+{
+  "$schema": "../schema/config.schema.json",
+  "version": 1,
+  "baseUrl": "https://docs.example.com/",
+  "browser": {
+    "headless": true,
+    "timeoutMs": 5000
+  },
+  "pages": [
+    {
+      "url": "getting-started/",
+      "checks": [
+        {
+          "id": "install-command",
+          "button": "#install-command button[aria-label='Copy code']",
+          "expected": {
+            "text": "pnpm add example-package"
+          },
+          "probe": "both"
+        }
+      ]
+    }
+  ]
+}
