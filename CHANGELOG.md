@@ -21,6 +21,8 @@ All notable changes will be documented in this file.
   inactive tabs and responsive duplicate markup.
 - Copy probes activate the discovered control directly so hover-only controls and unrelated visual
   overlap do not masquerade as clipboard-fidelity failures.
+- npm package metadata uses the canonical executable path, and release verification now requires an
+  installed `.bin` shim so a missing CLI command blocks publication.
 
 ## [0.1.0] - 2026-08-26
 

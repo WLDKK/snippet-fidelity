@@ -4,7 +4,7 @@
   "description": "Source-to-clipboard fidelity checks for rendered documentation code blocks.",
   "type": "module",
   "bin": {
-    "snippet-fidelity": "./dist/cli.js"
+    "snippet-fidelity": "dist/cli.js"
   },
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
@@ -37,6 +37,7 @@
     "test:e2e": "vitest run tests/audit.e2e.test.ts",
     "verify": "pnpm format:check && pnpm typecheck && pnpm test && pnpm build && npm pack --dry-run --cache artifacts/npm-cache",
     "release:check": "pnpm verify && node scripts/verify-package.mjs",
+    "prepublishOnly": "pnpm release:check",
     "prepack": "pnpm build"
   },
   "keywords": [

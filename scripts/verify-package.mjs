@@ -6,6 +6,16 @@ import { spawn } from "node:child_process";
 
 const repositoryRoot = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const packageJson = JSON.parse(await readFile(join(repositoryRoot, "package.json"), "utf8"));
+const binEntries = Object.entries(packageJson.bin ?? {});
+if (binEntries.length !== 1) {
+  throw new Error(`Expected exactly one CLI entry, found ${binEntries.length}.`);
+}
+const [[commandName, commandTarget]] = binEntries;
+if (typeof commandTarget !== "string" || commandTarget.startsWith("./")) {
+  throw new Error(
+    `CLI target must use npm's canonical package-relative form (for example "dist/cli.js"), received ${JSON.stringify(commandTarget)}.`,
+  );
+}
 const npm = process.platform === "win32" ? process.execPath : "npm";
 const npmPrefix =
   process.platform === "win32"
@@ -83,6 +93,14 @@ try {
   await access(join(installedRoot, "schema", "config.schema.json"));
   await access(join(installedRoot, "docs", "architecture.md"));
   const cliPath = join(installedRoot, "dist", "cli.js");
+  await access(cliPath);
+  const installedBin = join(
+    consumer,
+    "node_modules",
+    ".bin",
+    process.platform === "win32" ? `${commandName}.cmd` : commandName,
+  );
+  await access(installedBin);
   const version = await run(process.execPath, [cliPath, "--version"], {
     cwd: consumer,
     capture: true,
