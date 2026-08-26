@@ -1,6 +1,6 @@
 # Competitor and adjacent-work ledger
 
-Last reviewed: 2026-08-21
+Last reviewed: 2026-08-26
 
 This ledger prevents the project from drifting into an already-served category. "No direct
 competitor found" means no reusable project was found with the same primary user, input, and core
@@ -15,6 +15,11 @@ output. It is not a claim that private or unindexed software cannot exist.
 
 No standalone open-source project matching all four points was found in GitHub repository/code
 searches, npm, PyPI, crates.io, or scholarly searches under the terms recorded below.
+
+The 2026-08-26 pre-release refresh repeated the focused GitHub and npm searches. The only exact
+GitHub phrase match for `clipboard fidelity` was a general macOS clipboard-history application; the
+npm results were Clipboard API libraries, UI integrations, and code-block renderers rather than
+documentation copy-path auditors.
 
 ## Adjacent work
 

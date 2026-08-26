@@ -43,7 +43,16 @@
     "testing",
     "code-blocks"
   ],
+  "author": "Lidong Wang",
   "license": "MIT",
+  "homepage": "https://github.com/WLDKK/snippet-fidelity#readme",
+  "bugs": {
+    "url": "https://github.com/WLDKK/snippet-fidelity/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/WLDKK/snippet-fidelity.git"
+  },
   "engines": {
     "node": ">=22"
   },

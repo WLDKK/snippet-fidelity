@@ -1,0 +1,35 @@
+name: Feature request
+description: Propose a focused extension to the fidelity contract.
+title: "[Feature]: "
+labels: [enhancement]
+body:
+  - type: textarea
+    id: failure
+    attributes:
+      label: User-visible failure
+      description: Which documentation-copy failure is not detected today?
+    validations:
+      required: true
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Proposed evidence
+      description: What would the tool observe, and how would false positives be prevented?
+    validations:
+      required: true
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Reproduction or fixture
+      description: Link a public example or describe a synthetic fixture.
+    validations:
+      required: true
+  - type: checkboxes
+    id: scope
+    attributes:
+      label: Scope check
+      options:
+        - label:
+            This request concerns exact documentation copy fidelity rather than general clipboard
+            management.
+          required: true

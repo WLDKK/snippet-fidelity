@@ -2,13 +2,18 @@
 
 ## Supported versions
 
-The project is pre-release. Only the latest commit is eligible for security fixes.
+The project is pre-release. Security fixes are provided for the latest `0.1.x` release and the
+`main` branch.
+
+| Version | Supported |
+| ------- | --------- |
+| 0.1.x   | Yes       |
+| < 0.1   | No        |
 
 ## Reporting a vulnerability
 
-Once the project is public, use GitHub's private vulnerability-reporting interface. Do not include
-private documentation URLs, authentication cookies, copied secrets, or proprietary snippets in a
-public issue.
+Use GitHub's private vulnerability-reporting interface. Do not include private documentation URLs,
+authentication cookies, copied secrets, or proprietary snippets in a public issue.
 
 ## Operational safety
 

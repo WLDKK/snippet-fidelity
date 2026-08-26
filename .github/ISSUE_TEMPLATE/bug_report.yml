@@ -1,0 +1,48 @@
+name: Bug report
+description: Report an incorrect fidelity result, crash, or unsafe behavior.
+title: "[Bug]: "
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Do not paste secrets, private documentation URLs, authentication state, or proprietary snippets.
+  - type: textarea
+    id: summary
+    attributes:
+      label: Summary
+      description: What did Snippet Fidelity report, and what should it have reported?
+    validations:
+      required: true
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Minimal reproduction
+      description:
+        Provide a public URL or a synthetic fixture and the smallest relevant configuration.
+    validations:
+      required: true
+  - type: dropdown
+    id: evidence
+    attributes:
+      label: Evidence level
+      options:
+        - canonical-text
+        - canonical-file
+        - rendered-dom
+        - unsure
+    validations:
+      required: true
+  - type: textarea
+    id: environment
+    attributes:
+      label: Environment
+      description:
+        Snippet Fidelity version, Node.js version, operating system, and Chromium version.
+    validations:
+      required: true
+  - type: textarea
+    id: output
+    attributes:
+      label: Redacted output
+      description: Include the bounded diagnostic output after removing sensitive URLs or text.

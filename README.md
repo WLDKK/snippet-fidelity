@@ -1,5 +1,9 @@
 # Snippet Fidelity
 
+[![CI](https://github.com/WLDKK/snippet-fidelity/actions/workflows/ci.yml/badge.svg)](https://github.com/WLDKK/snippet-fidelity/actions/workflows/ci.yml)
+[![GitHub release](https://img.shields.io/github/v/release/WLDKK/snippet-fidelity)](https://github.com/WLDKK/snippet-fidelity/releases)
+[![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
+
 Snippet Fidelity checks whether a rendered documentation site's **Copy code** controls preserve the
 text maintainers intended to ship.
 
@@ -9,7 +13,7 @@ both observations at Unicode code-point precision. It detects changes such as te
 indentation loss, tab/space substitution, invisible characters, punctuation substitution, and
 Unicode normalization.
 
-> Project status: local `0.1.0` prototype. The repository has not been published and the API may
+> Project status: public pre-release (`v0.1.0`). The evidence model is usable, but the API may
 > change while the conformance contract is being validated.
 
 ## Why this is different
@@ -38,7 +42,16 @@ and regression triage.
 
 ## Quick start
 
-Requirements: Node.js 22 or newer and pnpm.
+Requirements: Node.js 22 or newer and Chromium. Install the versioned release archive directly from
+GitHub:
+
+```shell
+npm install --save-dev https://github.com/WLDKK/snippet-fidelity/releases/download/v0.1.0/snippet-fidelity-0.1.0.tgz
+npx playwright install chromium
+npx snippet-fidelity audit https://docs.example.com/
+```
+
+To run from a cloned checkout instead:
 
 ```shell
 pnpm install
@@ -141,8 +154,9 @@ node dist/cli.js audit --config examples/adversarial-fixture.config.json
 The expected result is one pass and five failures; a zero exit code would mean the fixture stopped
 testing the intended regressions.
 
-See [architecture](docs/architecture.md), [threat model](docs/threat-model.md), and the dated
-[competitor ledger](docs/competitor-ledger.md) for the project's scope and evidence.
+See [architecture](docs/architecture.md), [threat model](docs/threat-model.md),
+[contribution guide](CONTRIBUTING.md), and the dated [competitor ledger](docs/competitor-ledger.md)
+for the project's scope and evidence.
 
 ## License
 
