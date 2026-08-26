@@ -2,6 +2,7 @@
 
 [![CI](https://github.com/WLDKK/snippet-fidelity/actions/workflows/ci.yml/badge.svg)](https://github.com/WLDKK/snippet-fidelity/actions/workflows/ci.yml)
 [![GitHub release](https://img.shields.io/github/v/release/WLDKK/snippet-fidelity)](https://github.com/WLDKK/snippet-fidelity/releases)
+[![npm](https://img.shields.io/npm/v/snippet-fidelity)](https://www.npmjs.com/package/snippet-fidelity)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
 Snippet Fidelity checks whether a rendered documentation site's **Copy code** controls preserve the
@@ -13,7 +14,7 @@ both observations at Unicode code-point precision. It detects changes such as te
 indentation loss, tab/space substitution, invisible characters, punctuation substitution, and
 Unicode normalization.
 
-> Project status: public pre-release (`v0.1.0`). The evidence model is usable, but the API may
+> Project status: public pre-release (`v0.2.0`). The evidence model is usable, but the API may
 > change while the conformance contract is being validated.
 
 ## Why this is different
@@ -27,6 +28,12 @@ canonical snippet -> rendered page -> copy handler -> browser clipboard
 
 Reports do not include full expected or copied text by default. They contain SHA-256 fingerprints,
 lengths, categorized findings, and a bounded escaped context around the first difference.
+
+For broad documentation procedure, UI, API, or executable-example testing, use a general framework
+such as [Doc Detective](https://github.com/doc-detective/doc-detective). For low-level clipboard
+fixtures inside an existing Playwright suite, consider
+[Playwright Clipboard](https://github.com/vrknetha/playwright-clipboard). Snippet Fidelity stays
+narrow: reusable source-to-copy evidence for rendered documentation code blocks.
 
 ## Evidence levels
 
@@ -42,14 +49,15 @@ and regression triage.
 
 ## Quick start
 
-Requirements: Node.js 22 or newer and Chromium. Install the versioned release archive directly from
-GitHub:
+Requirements: Node.js 22 or newer and Chromium. Install the package and browser:
 
 ```shell
-npm install --save-dev https://github.com/WLDKK/snippet-fidelity/releases/download/v0.1.0/snippet-fidelity-0.1.0.tgz
+npm install --save-dev snippet-fidelity
 npx playwright install chromium
 npx snippet-fidelity audit https://docs.example.com/
 ```
+
+The versioned GitHub release archive remains available when registry installation is unsuitable.
 
 To run from a cloned checkout instead:
 
@@ -93,6 +101,21 @@ node dist/cli.js audit --config snippet-fidelity.config.json \
   --reporter markdown --reporter json --reporter junit \
   --output-dir artifacts
 ```
+
+## GitHub Action
+
+Use the repository directly as a merge gate after committing a source-aware configuration:
+
+```yaml
+- uses: actions/checkout@v4
+- uses: WLDKK/snippet-fidelity@v0
+  with:
+    config: snippet-fidelity.config.json
+    output-dir: artifacts/snippet-fidelity
+```
+
+See the [GitHub Action guide](docs/github-action.md) for inputs, report upload, failure behavior,
+and pinning guidance.
 
 On PowerShell, put the command on one line or use PowerShell's backtick continuation character.
 

@@ -6,7 +6,7 @@ import type { AuditReport } from "../src/types.js";
 
 const report: AuditReport = {
   schemaVersion: 1,
-  tool: { name: "snippet-fidelity", version: "0.1.0" },
+  tool: { name: "snippet-fidelity", version: "0.2.0" },
   generatedAt: "2026-08-21T00:00:00.000Z",
   environment: {
     browser: "chromium",

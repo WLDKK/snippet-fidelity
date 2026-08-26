@@ -1,0 +1,100 @@
+name: Snippet Fidelity
+description: Verify that documentation copy buttons preserve canonical code exactly.
+author: Lidong Wang
+
+branding:
+  icon: copy
+  color: blue
+
+inputs:
+  config:
+    description: Path to a source-aware snippet-fidelity configuration file.
+    required: false
+    default: ""
+  url:
+    description: Documentation URL to inspect using rendered-DOM discovery.
+    required: false
+    default: ""
+  output-dir:
+    description: Directory for generated reports, relative to the caller workspace.
+    required: false
+    default: snippet-fidelity-report
+  reporters:
+    description: "Comma-separated reporters: markdown, json, and/or junit."
+    required: false
+    default: markdown,json,junit
+  timeout:
+    description: Optional per-operation timeout in milliseconds.
+    required: false
+    default: ""
+
+outputs:
+  report-directory:
+    description: Directory containing the generated reports.
+    value: ${{ steps.audit.outputs.report-directory }}
+
+runs:
+  using: composite
+  steps:
+    - name: Set up pnpm
+      uses: pnpm/action-setup@v4
+      with:
+        version: 10.18.0
+
+    - name: Set up Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: 24
+        cache: pnpm
+        cache-dependency-path: ${{ github.action_path }}/pnpm-lock.yaml
+
+    - name: Install the locked runtime
+      shell: bash
+      working-directory: ${{ github.action_path }}
+      run: |
+        set -euo pipefail
+        pnpm install --prod --frozen-lockfile
+        node node_modules/playwright/cli.js install --with-deps chromium
+
+    - name: Audit documentation copy controls
+      id: audit
+      shell: bash
+      env:
+        SNIPPET_FIDELITY_CONFIG: ${{ inputs.config }}
+        SNIPPET_FIDELITY_URL: ${{ inputs.url }}
+        SNIPPET_FIDELITY_OUTPUT_DIR: ${{ inputs.output-dir }}
+        SNIPPET_FIDELITY_REPORTERS: ${{ inputs.reporters }}
+        SNIPPET_FIDELITY_TIMEOUT: ${{ inputs.timeout }}
+      run: |
+        set -euo pipefail
+
+        if [[ -n "$SNIPPET_FIDELITY_CONFIG" && -n "$SNIPPET_FIDELITY_URL" ]]; then
+          echo "Provide exactly one of 'config' or 'url'." >&2
+          exit 2
+        fi
+        if [[ -z "$SNIPPET_FIDELITY_CONFIG" && -z "$SNIPPET_FIDELITY_URL" ]]; then
+          echo "Provide exactly one of 'config' or 'url'." >&2
+          exit 2
+        fi
+
+        args=(audit)
+        if [[ -n "$SNIPPET_FIDELITY_CONFIG" ]]; then
+          args+=(--config "$SNIPPET_FIDELITY_CONFIG")
+        else
+          args+=("$SNIPPET_FIDELITY_URL")
+        fi
+
+        args+=(--output-dir "$SNIPPET_FIDELITY_OUTPUT_DIR")
+        IFS=',' read -ra reporter_values <<< "$SNIPPET_FIDELITY_REPORTERS"
+        for reporter in "${reporter_values[@]}"; do
+          reporter="${reporter//[[:space:]]/}"
+          if [[ -n "$reporter" ]]; then
+            args+=(--reporter "$reporter")
+          fi
+        done
+        if [[ -n "$SNIPPET_FIDELITY_TIMEOUT" ]]; then
+          args+=(--timeout "$SNIPPET_FIDELITY_TIMEOUT")
+        fi
+
+        echo "report-directory=$SNIPPET_FIDELITY_OUTPUT_DIR" >> "$GITHUB_OUTPUT"
+        node "$GITHUB_ACTION_PATH/dist/cli.js" "${args[@]}"

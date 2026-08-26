@@ -1,0 +1,19 @@
+{
+  "$schema": "../schema/config.schema.json",
+  "version": 1,
+  "baseUrl": "http://127.0.0.1:4173/",
+  "browser": { "timeoutMs": 5000 },
+  "pages": [
+    {
+      "url": "/",
+      "checks": [
+        {
+          "id": "good-unicode",
+          "button": "#copy-good-unicode",
+          "expected": { "text": "printf '你好 👋 — café'" },
+          "probe": "both"
+        }
+      ]
+    }
+  ]
+}

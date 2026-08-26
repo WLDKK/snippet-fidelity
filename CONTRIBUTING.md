@@ -22,6 +22,9 @@ pnpm exec playwright install chromium
 pnpm verify
 ```
 
+The compiled `dist/` tree is committed because tagged revisions are also consumed as a GitHub
+Action. Run `pnpm build` and include matching `dist/` changes when source code changes.
+
 ## Change requirements
 
 - Add a failing fixture or test before fixing a fidelity-classification bug.

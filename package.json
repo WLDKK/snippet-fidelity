@@ -1,6 +1,6 @@
 {
   "name": "snippet-fidelity",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Source-to-clipboard fidelity checks for rendered documentation code blocks.",
   "type": "module",
   "bin": {
@@ -27,6 +27,7 @@
   ],
   "scripts": {
     "build": "tsc -p tsconfig.build.json",
+    "dist:check": "pnpm build && git diff --exit-code -- dist",
     "fixture": "node scripts/serve-fixture.mjs",
     "fixture:verify": "node scripts/verify-fixture.mjs",
     "format": "prettier --write .",
@@ -34,7 +35,9 @@
     "typecheck": "tsc -p tsconfig.json --noEmit",
     "test": "vitest run",
     "test:e2e": "vitest run tests/audit.e2e.test.ts",
-    "verify": "pnpm format:check && pnpm typecheck && pnpm test && pnpm build && npm pack --dry-run"
+    "verify": "pnpm format:check && pnpm typecheck && pnpm test && pnpm build && npm pack --dry-run --cache artifacts/npm-cache",
+    "release:check": "pnpm verify && node scripts/verify-package.mjs",
+    "prepack": "pnpm build"
   },
   "keywords": [
     "clipboard",

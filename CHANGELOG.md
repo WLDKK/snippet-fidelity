@@ -4,6 +4,20 @@ All notable changes will be documented in this file.
 
 ## [Unreleased]
 
+## [0.2.0] - 2026-08-26
+
+### Added
+
+- A reusable composite GitHub Action with Markdown, JSON, and JUnit report output.
+- A positive end-to-end Action smoke check in CI.
+- A clean consumer-install verification for release archives.
+
+### Changed
+
+- npm is now the primary installation path.
+- Compiled output is committed and checked in CI so tagged Action revisions are self-contained.
+- The competitor ledger now covers Doc Detective, Playwright Clipboard, and custom Playwright tests.
+
 ## [0.1.0] - 2026-08-26
 
 ### Added
@@ -16,5 +30,6 @@ All notable changes will be documented in this file.
 - Adversarial end-to-end fixture corpus.
 - Bounded discovery retries for documentation controls rendered after the page load event.
 
-[Unreleased]: https://github.com/WLDKK/snippet-fidelity/compare/v0.1.0...HEAD
+[Unreleased]: https://github.com/WLDKK/snippet-fidelity/compare/v0.2.0...HEAD
+[0.2.0]: https://github.com/WLDKK/snippet-fidelity/compare/v0.1.0...v0.2.0
 [0.1.0]: https://github.com/WLDKK/snippet-fidelity/releases/tag/v0.1.0

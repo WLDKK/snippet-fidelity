@@ -16,21 +16,23 @@ output. It is not a claim that private or unindexed software cannot exist.
 No standalone open-source project matching all four points was found in GitHub repository/code
 searches, npm, PyPI, crates.io, or scholarly searches under the terms recorded below.
 
-The 2026-08-26 pre-release refresh repeated the focused GitHub and npm searches. The only exact
-GitHub phrase match for `clipboard fidelity` was a general macOS clipboard-history application; the
-npm results were Clipboard API libraries, UI integrations, and code-block renderers rather than
-documentation copy-path auditors.
+The 2026-08-26 pre-release refresh repeated the focused GitHub and npm searches. It did not find a
+reusable project matching all four points, but it did identify strong adjacent tools. This is a
+narrow differentiation claim, not a claim that maintainers have no alternative: a project-local
+Playwright assertion is the most direct substitute.
 
 ## Adjacent work
 
-| Project                                                                                                           | What it covers                              | Boundary from Snippet Fidelity                                                                     |
-| ----------------------------------------------------------------------------------------------------------------- | ------------------------------------------- | -------------------------------------------------------------------------------------------------- |
-| [AIX Validator](https://solotrillion.io/validator)                                                                | Conformance of pasted AI-generated Markdown | Does not crawl documentation pages, activate code-copy controls, or compare against canonical code |
-| [W3C Clipboard API tests](https://github.com/w3c/clipboard-apis/blob/main/tests.html)                             | Clipboard API behavior                      | Browser API conformance rather than documentation-snippet fidelity                                 |
-| [Leia](https://www.npmjs.com/package/@lando/leia)                                                                 | Execution of commands embedded in Markdown  | Tests whether examples run, not what a copy control writes                                         |
-| [remark-lint](https://github.com/remarkjs/remark-lint)                                                            | Markdown source style                       | Does not exercise rendering or the clipboard                                                       |
-| [textbee local E2E check](https://github.com/textbee/textbee/blob/main/web/e2e/api-guide.spec.ts)                 | One repository's copy control               | Project-local assertion, not a reusable cross-framework corpus or tool                             |
-| [Nextcloud Text local E2E check](https://github.com/nextcloud/text/blob/main/cypress/e2e/nodes/CodeBlock.spec.js) | One product's code-block copy behavior      | Project-local assertion, not source-aware documentation CI tooling                                 |
+| Project                                                                                                           | What it covers                                              | Boundary from Snippet Fidelity                                                                            |
+| ----------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------- | --------------------------------------------------------------------------------------------------------- |
+| [Doc Detective](https://github.com/doc-detective/doc-detective)                                                   | Browser, API, procedure, and code testing for documentation | Broad documentation testing; exact canonical/DOM/handler/clipboard comparison is not its primary contract |
+| [Playwright Clipboard](https://github.com/vrknetha/playwright-clipboard)                                          | Cross-browser clipboard operations for Playwright tests     | A low-level fixture library; not source-aware documentation discovery, evidence, or reporting             |
+| [AIX Validator](https://solotrillion.io/validator)                                                                | Conformance of pasted AI-generated Markdown                 | Does not crawl documentation pages, activate code-copy controls, or compare against canonical code        |
+| [W3C Clipboard API tests](https://github.com/w3c/clipboard-apis/blob/main/tests.html)                             | Clipboard API behavior                                      | Browser API conformance rather than documentation-snippet fidelity                                        |
+| [Leia](https://www.npmjs.com/package/@lando/leia)                                                                 | Execution of commands embedded in Markdown                  | Tests whether examples run, not what a copy control writes                                                |
+| [remark-lint](https://github.com/remarkjs/remark-lint)                                                            | Markdown source style                                       | Does not exercise rendering or the clipboard                                                              |
+| [textbee local E2E check](https://github.com/textbee/textbee/blob/main/web/e2e/api-guide.spec.ts)                 | One repository's copy control                               | Project-local assertion, not a reusable cross-framework corpus or tool                                    |
+| [Nextcloud Text local E2E check](https://github.com/nextcloud/text/blob/main/cypress/e2e/nodes/CodeBlock.spec.js) | One product's code-block copy behavior                      | Project-local assertion, not source-aware documentation CI tooling                                        |
 
 ## Demand evidence
 
@@ -50,6 +52,8 @@ documentation copy-path auditors.
 - documentation copy button verifier
 - code copy integrity CI
 - Playwright documentation clipboard test
+- Doc Detective clipboard copy validation
+- playwright-clipboard documentation code block
 - source to clipboard code block
 - GitHub Action verify copy code buttons
 

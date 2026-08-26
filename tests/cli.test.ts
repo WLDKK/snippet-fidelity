@@ -19,7 +19,7 @@ describe("CLI", () => {
   it("prints its version without launching a browser", async () => {
     const capture = captureIo();
     expect(await runCli(["--version"], capture.io)).toBe(0);
-    expect(capture.stdout.join("")).toBe("0.1.0\n");
+    expect(capture.stdout.join("")).toBe("0.2.0\n");
     expect(capture.stderr).toEqual([]);
   });
 

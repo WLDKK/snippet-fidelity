@@ -24,3 +24,17 @@ jobs:
       - run: pnpm install --frozen-lockfile
       - run: pnpm exec playwright install --with-deps chromium
       - run: pnpm verify
+      - name: Ensure the committed action build is current
+        run: git diff --exit-code -- dist
+      - name: Start the positive fixture
+        shell: bash
+        run: |
+          node scripts/serve-fixture.mjs > "$RUNNER_TEMP/snippet-fidelity-fixture.log" 2>&1 &
+          curl --fail --retry 20 --retry-connrefused --retry-delay 1 http://127.0.0.1:4173/
+      - name: Exercise the repository as an action
+        uses: ./
+        with:
+          config: examples/action-smoke.config.json
+          output-dir: artifacts/action-smoke
+      - name: Verify the action report contract
+        run: node scripts/verify-action-report.mjs artifacts/action-smoke/snippet-fidelity.json
