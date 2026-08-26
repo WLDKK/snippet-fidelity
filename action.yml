@@ -45,8 +45,6 @@ runs:
       uses: actions/setup-node@v4
       with:
         node-version: 24
-        cache: pnpm
-        cache-dependency-path: ${{ github.action_path }}/pnpm-lock.yaml
 
     - name: Install the locked runtime
       shell: bash
