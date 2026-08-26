@@ -53,6 +53,10 @@ The browser-clipboard probe writes a unique sentinel, clicks the target, and pol
 clipboard differs from the sentinel or the timeout expires. This prevents an unchanged clipboard
 from being misreported as a successful empty or stale copy.
 
+Discovery performs bounded retries when no matching controls exist immediately after navigation.
+This covers client-rendered documentation without turning continuously changing pages into an
+unbounded wait.
+
 ## Failure model
 
 - `failed`: every required probe was available, but at least one did not match.

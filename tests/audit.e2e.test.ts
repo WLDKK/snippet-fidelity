@@ -80,7 +80,7 @@ describe("browser audit", () => {
       version: 1,
       pages: [
         {
-          url: server.baseUrl,
+          url: `${server.baseUrl}?renderDelayMs=200`,
           discover: { probe: "both" },
         },
       ],

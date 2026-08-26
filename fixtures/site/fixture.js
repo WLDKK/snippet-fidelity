@@ -1,5 +1,12 @@
 const corpus = await fetch("/corpus.json").then((response) => response.json());
 const fixtures = document.querySelector("#fixtures");
+const renderDelayMs = Number(
+  new URL(window.location.href).searchParams.get("renderDelayMs") ?? "0",
+);
+
+if (Number.isFinite(renderDelayMs) && renderDelayMs > 0) {
+  await new Promise((resolve) => setTimeout(resolve, renderDelayMs));
+}
 
 function transform(value, name) {
   if (name === "append-newline") return `${value}\n`;

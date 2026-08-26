@@ -14,6 +14,7 @@ All notable changes will be documented in this file.
 - Unicode-aware fingerprints and categorized first-difference diagnostics.
 - JSON, JUnit XML, and Markdown reports.
 - Adversarial end-to-end fixture corpus.
+- Bounded discovery retries for documentation controls rendered after the page load event.
 
 [Unreleased]: https://github.com/WLDKK/snippet-fidelity/compare/v0.1.0...HEAD
 [0.1.0]: https://github.com/WLDKK/snippet-fidelity/releases/tag/v0.1.0

@@ -166,59 +166,69 @@ async function discoverChecks(
     ancestorDepth: discovery.ancestorDepth ?? 2,
   };
 
-  const discovered = await page.evaluate((input): DiscoveredCheck[] => {
-    document
-      .querySelectorAll("[data-snippet-fidelity-button]")
-      .forEach((element) => element.removeAttribute("data-snippet-fidelity-button"));
+  const scan = (): Promise<DiscoveredCheck[]> =>
+    page.evaluate((input): DiscoveredCheck[] => {
+      document
+        .querySelectorAll("[data-snippet-fidelity-button]")
+        .forEach((element) => element.removeAttribute("data-snippet-fidelity-button"));
 
-    const namePattern = new RegExp(input.buttonNamePattern, "iu");
-    const usedButtons = new Set<Element>();
-    const results: DiscoveredCheck[] = [];
-    const blocks = [...document.querySelectorAll(input.blockSelector)];
+      const namePattern = new RegExp(input.buttonNamePattern, "iu");
+      const usedButtons = new Set<Element>();
+      const results: DiscoveredCheck[] = [];
+      const blocks = [...document.querySelectorAll(input.blockSelector)];
 
-    for (const [index, block] of blocks.entries()) {
-      const code = block.matches(input.codeSelector)
-        ? block
-        : (block.querySelector(input.codeSelector) ?? block);
-      let scope: Element | null = block;
-      let button: Element | null = null;
+      for (const [index, block] of blocks.entries()) {
+        const code = block.matches(input.codeSelector)
+          ? block
+          : (block.querySelector(input.codeSelector) ?? block);
+        let scope: Element | null = block;
+        let button: Element | null = null;
 
-      for (let depth = 0; depth <= input.ancestorDepth && scope !== null; depth += 1) {
-        const candidates = [
-          ...(scope.matches(input.buttonSelector) ? [scope] : []),
-          ...scope.querySelectorAll(input.buttonSelector),
-        ];
-        button =
-          candidates.find((candidate) => {
-            if (usedButtons.has(candidate)) return false;
-            const accessibleName = [
-              candidate.getAttribute("aria-label"),
-              candidate.getAttribute("title"),
-              candidate.textContent,
-            ]
-              .filter((value): value is string => value !== null)
-              .join(" ");
-            return namePattern.test(accessibleName);
-          }) ?? null;
-        if (button !== null) break;
-        scope = scope.parentElement;
+        for (let depth = 0; depth <= input.ancestorDepth && scope !== null; depth += 1) {
+          const candidates = [
+            ...(scope.matches(input.buttonSelector) ? [scope] : []),
+            ...scope.querySelectorAll(input.buttonSelector),
+          ];
+          button =
+            candidates.find((candidate) => {
+              if (usedButtons.has(candidate)) return false;
+              const accessibleName = [
+                candidate.getAttribute("aria-label"),
+                candidate.getAttribute("title"),
+                candidate.textContent,
+              ]
+                .filter((value): value is string => value !== null)
+                .join(" ");
+              return namePattern.test(accessibleName);
+            }) ?? null;
+          if (button !== null) break;
+          scope = scope.parentElement;
+        }
+
+        if (button === null) continue;
+        const marker = `sf-${index + 1}`;
+        button.setAttribute("data-snippet-fidelity-button", marker);
+        usedButtons.add(button);
+        results.push({
+          id:
+            code.getAttribute("data-snippet-id") ??
+            block.getAttribute("data-snippet-id") ??
+            `discovered-${index + 1}`,
+          button: `[data-snippet-fidelity-button="${marker}"]`,
+          expectedText: code.textContent ?? "",
+        });
       }
+      return results;
+    }, options);
 
-      if (button === null) continue;
-      const marker = `sf-${index + 1}`;
-      button.setAttribute("data-snippet-fidelity-button", marker);
-      usedButtons.add(button);
-      results.push({
-        id:
-          code.getAttribute("data-snippet-id") ??
-          block.getAttribute("data-snippet-id") ??
-          `discovered-${index + 1}`,
-        button: `[data-snippet-fidelity-button="${marker}"]`,
-        expectedText: code.textContent ?? "",
-      });
-    }
-    return results;
-  }, options);
+  let discovered = await scan();
+  const deadline = Date.now() + defaultTimeoutMs;
+  while (discovered.length === 0) {
+    const remainingMs = deadline - Date.now();
+    if (remainingMs <= 0) break;
+    await page.waitForTimeout(Math.min(50, remainingMs));
+    discovered = await scan();
+  }
 
   return discovered.map((check) => ({
     ...check,
