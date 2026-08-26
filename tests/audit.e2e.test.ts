@@ -90,4 +90,16 @@ describe("browser audit", () => {
     expect(report.checks.map((check) => check.id)).toEqual(Object.keys(corpus));
     expect(report.checks.every((check) => check.expected?.source === "rendered-dom")).toBe(true);
   });
+
+  it("ignores copy controls inside hidden code blocks", async () => {
+    const config = validateConfig({
+      version: 1,
+      pages: [{ url: server.baseUrl, discover: {} }],
+    });
+
+    const report = await audit(config);
+
+    expect(report.checks).toHaveLength(Object.keys(corpus).length);
+    expect(report.checks.map((check) => check.id)).toEqual(Object.keys(corpus));
+  });
 });

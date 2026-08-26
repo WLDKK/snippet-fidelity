@@ -4,5 +4,6 @@ artifacts/
 coverage/
 playwright-report/
 test-results/
+debug.log
 *.tgz
 .DS_Store

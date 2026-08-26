@@ -143,10 +143,12 @@ one button; ambiguous selectors fail safely.
 - It does not claim source fidelity when expected text came from the rendered DOM.
 - It does not click arbitrary page controls; discovery is limited to copy-named controls near
   matching code blocks.
+- It does not test pointer hit-targeting or visual overlap. Once a rendered copy control is found,
+  the audit activates that intended control directly to isolate clipboard fidelity.
 
 ## Current limitations
 
-- Chromium is the only supported browser in `0.1.x`.
+- Chromium is the only supported browser in `0.2.x`.
 - Copy implementations that do not use `navigator.clipboard.writeText` can still be tested through
   the browser clipboard, but will not produce a handler-payload observation.
 - Source files are read as exact UTF-8 text. A final newline in the file is part of the contract.
@@ -179,7 +181,8 @@ testing the intended regressions.
 
 See [architecture](docs/architecture.md), [threat model](docs/threat-model.md),
 [contribution guide](CONTRIBUTING.md), and the dated [competitor ledger](docs/competitor-ledger.md)
-for the project's scope and evidence.
+for the project's scope and evidence. The [public-site pilot study](docs/pilot-study-2026-08-26.md)
+records cross-project results, limitations, and a defect found and fixed in Snippet Fidelity itself.
 
 ## License
 

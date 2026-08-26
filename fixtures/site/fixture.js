@@ -49,3 +49,19 @@ for (const [id, fixture] of Object.entries(corpus)) {
   section.append(heading, pre, button);
   fixtures.append(section);
 }
+
+// Responsive documentation themes commonly keep inactive tab content mounted.
+// Discovery must ignore these hidden copy controls instead of reporting a
+// timeout for something a reader cannot interact with.
+const hiddenSection = document.createElement("section");
+hiddenSection.hidden = true;
+const hiddenPre = document.createElement("pre");
+const hiddenCode = document.createElement("code");
+hiddenCode.textContent = "npm install hidden-example";
+hiddenPre.append(hiddenCode);
+const hiddenButton = document.createElement("button");
+hiddenButton.type = "button";
+hiddenButton.setAttribute("aria-label", "Copy hidden code");
+hiddenButton.textContent = "Copy code";
+hiddenSection.append(hiddenPre, hiddenButton);
+fixtures.append(hiddenSection);

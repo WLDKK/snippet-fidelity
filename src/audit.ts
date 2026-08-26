@@ -177,7 +177,26 @@ async function discoverChecks(
       const results: DiscoveredCheck[] = [];
       const blocks = [...document.querySelectorAll(input.blockSelector)];
 
+      const isRendered = (element: Element): boolean => {
+        const visibilityCheck = (element as HTMLElement).checkVisibility;
+        if (typeof visibilityCheck === "function") {
+          return visibilityCheck.call(element, {
+            checkVisibilityCSS: true,
+          });
+        }
+        const style = window.getComputedStyle(element);
+        return (
+          element.getClientRects().length > 0 &&
+          style.display !== "none" &&
+          style.visibility !== "hidden"
+        );
+      };
+
       for (const [index, block] of blocks.entries()) {
+        // Tab systems and responsive layouts often leave duplicate code blocks in
+        // the DOM. Auditing those hidden controls produces click timeouts rather
+        // than evidence about what a reader can actually copy.
+        if (!isRendered(block)) continue;
         const code = block.matches(input.codeSelector)
           ? block
           : (block.querySelector(input.codeSelector) ?? block);
@@ -192,6 +211,7 @@ async function discoverChecks(
           button =
             candidates.find((candidate) => {
               if (usedButtons.has(candidate)) return false;
+              if (!isRendered(candidate)) return false;
               const accessibleName = [
                 candidate.getAttribute("aria-label"),
                 candidate.getAttribute("title"),
@@ -302,7 +322,10 @@ async function captureCopy(
 
   const sentinel = `snippet-fidelity:${randomUUID()}`;
   const clipboardResetError = await resetProbeState(page, sentinel);
-  await button.click({ timeout: timeoutMs });
+  // Fidelity is about the selected control's payload, not pointer hit-testing.
+  // Force the activation after discovery has established that the control and
+  // its code block are rendered; this also handles controls revealed on hover.
+  await button.click({ force: true, timeout: timeoutMs });
 
   const capture: ProbeCapture = {
     handlerText: null,

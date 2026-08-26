@@ -112,7 +112,24 @@ async function discoverChecks(page, discovery, defaultTimeoutMs) {
         const usedButtons = new Set();
         const results = [];
         const blocks = [...document.querySelectorAll(input.blockSelector)];
+        const isRendered = (element) => {
+            const visibilityCheck = element.checkVisibility;
+            if (typeof visibilityCheck === "function") {
+                return visibilityCheck.call(element, {
+                    checkVisibilityCSS: true,
+                });
+            }
+            const style = window.getComputedStyle(element);
+            return (element.getClientRects().length > 0 &&
+                style.display !== "none" &&
+                style.visibility !== "hidden");
+        };
         for (const [index, block] of blocks.entries()) {
+            // Tab systems and responsive layouts often leave duplicate code blocks in
+            // the DOM. Auditing those hidden controls produces click timeouts rather
+            // than evidence about what a reader can actually copy.
+            if (!isRendered(block))
+                continue;
             const code = block.matches(input.codeSelector)
                 ? block
                 : (block.querySelector(input.codeSelector) ?? block);
@@ -126,6 +143,8 @@ async function discoverChecks(page, discovery, defaultTimeoutMs) {
                 button =
                     candidates.find((candidate) => {
                         if (usedButtons.has(candidate))
+                            return false;
+                        if (!isRendered(candidate))
                             return false;
                         const accessibleName = [
                             candidate.getAttribute("aria-label"),
@@ -227,7 +246,10 @@ async function captureCopy(page, buttonSelector, mode, timeoutMs) {
     }
     const sentinel = `snippet-fidelity:${randomUUID()}`;
     const clipboardResetError = await resetProbeState(page, sentinel);
-    await button.click({ timeout: timeoutMs });
+    // Fidelity is about the selected control's payload, not pointer hit-testing.
+    // Force the activation after discovery has established that the control and
+    // its code block are rendered; this also handles controls revealed on hover.
+    await button.click({ force: true, timeout: timeoutMs });
     const capture = {
         handlerText: null,
         handlerError: null,

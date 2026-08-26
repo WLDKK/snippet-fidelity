@@ -17,6 +17,10 @@ All notable changes will be documented in this file.
 - npm is now the primary installation path.
 - Compiled output is committed and checked in CI so tagged Action revisions are self-contained.
 - The competitor ledger now covers Doc Detective, Playwright Clipboard, and custom Playwright tests.
+- Automatic discovery ignores hidden code blocks and copy controls, preventing false errors from
+  inactive tabs and responsive duplicate markup.
+- Copy probes activate the discovered control directly so hover-only controls and unrelated visual
+  overlap do not masquerade as clipboard-fidelity failures.
 
 ## [0.1.0] - 2026-08-26
 
