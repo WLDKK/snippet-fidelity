@@ -183,6 +183,9 @@ See [architecture](docs/architecture.md), [threat model](docs/threat-model.md),
 [contribution guide](CONTRIBUTING.md), and the dated [competitor ledger](docs/competitor-ledger.md)
 for the project's scope and evidence. The [public-site pilot study](docs/pilot-study-2026-08-26.md)
 records cross-project results, limitations, and a defect found and fixed in Snippet Fidelity itself.
+The
+[Obsidian Webpage Export upstream case](docs/upstream-case-obsidian-webpage-export-2026-08-27.md)
+documents a source-aware validation and an open fix proposal without presenting it as adopted.
 
 ## License
 
