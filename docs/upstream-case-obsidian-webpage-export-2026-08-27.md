@@ -37,12 +37,27 @@ dynamically loaded child documents, and previews follow the same path.
 - A real Windows clipboard round-trip preserved content apart from the operating system's expected
   LF-to-CRLF conversion.
 - Snippet Fidelity's source-aware rendered-page audit passed its configured check (`1/1`).
-- GitHub reports one commit, two changed files, 92 additions, no conflicts with the base branch, and
-  no CI workflow or commit-status checks configured at submission time.
+- GitHub reports two commits, two changed files, 94 additions, no conflicts with the base branch,
+  and no CI workflow or commit-status checks configured at submission time.
 
 The retained local Snippet Fidelity report is
 `artifacts/upstream-pilot/snippet-report-final/snippet-fidelity.md`. The artifacts directory is
 intentionally ignored because it can include point-in-time browser output.
+
+## Post-submission review
+
+Copilot's first review identified a real edge case: `Document.execCommand` can be absent or throw,
+which would let an implementation-specific exception escape instead of reporting a failed fallback.
+Follow-up commit
+[`9beb0b2`](https://github.com/KosmosisDire/obsidian-webpage-export/pull/751/commits/9beb0b297ef98e0dcde951004a63a6042515a61e)
+uses an optional call, converts exceptions into a `false` result, and still restores the prior
+focus/selection and removes the temporary textarea in `finally`.
+
+The follow-up was verified with the production build, ESLint on the module, the original browser
+regression suite, and new browser cases for both a missing and a throwing `execCommand`. The
+source-aware Snippet Fidelity audit remained `1/1` passed. This review response is stronger evidence
+than treating the initial submission as finished: it records how an external finding changed the
+implementation and expanded the regression contract.
 
 ## What this case demonstrates
 
