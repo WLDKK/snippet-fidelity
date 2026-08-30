@@ -2,13 +2,13 @@
 
 ## Supported versions
 
-The project is pre-release. Security fixes are provided for the latest `0.1.x` release and the
-`main` branch.
+The project is pre-release. Security fixes are provided for the latest published `0.x` release and
+the `main` branch.
 
-| Version | Supported |
-| ------- | --------- |
-| 0.1.x   | Yes       |
-| < 0.1   | No        |
+| Version             | Supported |
+| ------------------- | --------- |
+| Latest released 0.x | Yes       |
+| Older 0.x releases  | No        |
 
 ## Reporting a vulnerability
 

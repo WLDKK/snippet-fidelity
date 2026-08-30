@@ -35,7 +35,7 @@ node dist/cli.js audit --config examples/adversarial-fixture.config.json
 The audit reports the failure category and first differing Unicode code point without printing the
 full snippet by default. See [Development](#development) for the complete verification gate.
 
-> Project status: public pre-release (`v0.2.0`). The evidence model is usable, but the API may
+> Project status: public pre-release (`v0.3.0`). The evidence model is usable, but the API may
 > change while the conformance contract is being validated.
 
 ## Try it in one workflow step
