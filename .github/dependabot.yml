@@ -7,6 +7,10 @@ updates:
       day: monday
       time: "09:00"
       timezone: Asia/Shanghai
+    groups:
+      github-actions:
+        patterns:
+          - "*"
   - package-ecosystem: npm
     directory: "/"
     schedule:
