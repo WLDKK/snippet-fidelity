@@ -131,6 +131,10 @@ Use the repository directly as a merge gate after committing a source-aware conf
 See the [GitHub Action guide](docs/github-action.md) for inputs, report upload, failure behavior,
 and pinning guidance.
 
+The action publishes a Markdown job summary and one GitHub error annotation per non-passing check by
+default, so reviewers can see the failure category and first differing code point without opening
+raw logs. This can be disabled with `github-summary: false`.
+
 On PowerShell, put the command on one line or use PowerShell's backtick continuation character.
 
 ## Probe modes

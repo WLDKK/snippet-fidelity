@@ -27,6 +27,10 @@ inputs:
     description: Optional per-operation timeout in milliseconds.
     required: false
     default: ""
+  github-summary:
+    description: Publish the audit report and failure annotations in the GitHub workflow UI.
+    required: false
+    default: "true"
 
 outputs:
   report-directory:
@@ -63,6 +67,7 @@ runs:
         SNIPPET_FIDELITY_OUTPUT_DIR: ${{ inputs.output-dir }}
         SNIPPET_FIDELITY_REPORTERS: ${{ inputs.reporters }}
         SNIPPET_FIDELITY_TIMEOUT: ${{ inputs.timeout }}
+        SNIPPET_FIDELITY_GITHUB_SUMMARY: ${{ inputs.github-summary }}
       run: |
         set -euo pipefail
 

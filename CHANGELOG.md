@@ -4,6 +4,11 @@ All notable changes will be documented in this file.
 
 ## [Unreleased]
 
+### Added
+
+- GitHub Actions now publish a Markdown job summary and escaped error annotations for every
+  non-passing fidelity check, with an opt-out input for callers that want file-only reports.
+
 ## [0.2.0] - 2026-08-26
 
 ### Added

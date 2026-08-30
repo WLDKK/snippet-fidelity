@@ -6,6 +6,7 @@ import { parseArgs } from "node:util";
 
 import { audit } from "./audit.js";
 import { loadConfig, validateConfig } from "./config.js";
+import { publishGitHubResult } from "./github.js";
 import {
   isReporterName,
   renderJson,
@@ -151,6 +152,12 @@ export async function runCli(args: string[], io: CliIo = DEFAULT_IO): Promise<nu
       const paths = await writeReports(report, outputDirectory, reporters);
       io.stdout(summaryLine(report));
       for (const path of paths) io.stdout(`Report: ${path}\n`);
+    }
+    if (process.env.SNIPPET_FIDELITY_GITHUB_SUMMARY === "true") {
+      await publishGitHubResult(report, {
+        summaryPath: process.env.GITHUB_STEP_SUMMARY,
+        writeCommand: io.stdout,
+      });
     }
     return report.summary.failed > 0 || report.summary.errors > 0 ? 1 : 0;
   } catch (error) {
