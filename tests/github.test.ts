@@ -89,16 +89,38 @@ describe("GitHub result integration", () => {
   it("appends the Markdown report to the GitHub step summary", async () => {
     const directory = await mkdtemp(join(tmpdir(), "snippet-fidelity-github-"));
     const summaryPath = join(directory, "summary.md");
+    const outputPath = join(directory, "output.txt");
     const commands: string[] = [];
 
-    await publishGitHubResult(report, {
+    const warnings = await publishGitHubResult(report, {
       summaryPath,
+      outputPath,
       writeCommand: (value) => commands.push(value),
     });
 
     const summary = await readFile(summaryPath, "utf8");
+    const output = await readFile(outputPath, "utf8");
     expect(summary).toContain("# Snippet Fidelity report");
     expect(summary).toContain("| 2 | 1 | 1 | 0 |");
+    expect(output).toContain("outcome=failed\n");
+    expect(output).toContain("passed=1\n");
+    expect(output).toContain("failed=1\n");
     expect(commands).toHaveLength(1);
+    expect(warnings).toEqual([]);
+  });
+
+  it("keeps annotations available when the summary file cannot be written", async () => {
+    const directory = await mkdtemp(join(tmpdir(), "snippet-fidelity-github-"));
+    const commands: string[] = [];
+
+    const warnings = await publishGitHubResult(report, {
+      summaryPath: directory,
+      outputPath: undefined,
+      writeCommand: (value) => commands.push(value),
+    });
+
+    expect(commands).toHaveLength(1);
+    expect(warnings).toHaveLength(1);
+    expect(warnings[0]).toContain("could not write the GitHub job summary");
   });
 });

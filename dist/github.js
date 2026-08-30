@@ -40,11 +40,42 @@ export function renderGitHubAnnotations(report) {
     });
 }
 export async function publishGitHubResult(report, options) {
+    const warnings = [];
+    if (options.outputPath !== undefined && options.outputPath !== "") {
+        const outcome = report.summary.failed > 0 || report.summary.errors > 0 ? "failed" : "passed";
+        const output = [
+            `outcome=${outcome}`,
+            `total=${report.summary.total}`,
+            `passed=${report.summary.passed}`,
+            `failed=${report.summary.failed}`,
+            `errors=${report.summary.errors}`,
+            "",
+        ].join("\n");
+        try {
+            await appendFile(options.outputPath, output, "utf8");
+        }
+        catch (error) {
+            warnings.push(`could not write GitHub Action outputs: ${error instanceof Error ? error.message : String(error)}`);
+        }
+    }
+    if (options.writeCommand !== undefined) {
+        for (const annotation of renderGitHubAnnotations(report)) {
+            try {
+                options.writeCommand(annotation);
+            }
+            catch (error) {
+                warnings.push(`could not write a GitHub annotation: ${error instanceof Error ? error.message : String(error)}`);
+            }
+        }
+    }
     if (options.summaryPath !== undefined && options.summaryPath !== "") {
-        await appendFile(options.summaryPath, `${renderMarkdown(report)}\n`, "utf8");
+        try {
+            await appendFile(options.summaryPath, `${renderMarkdown(report)}\n`, "utf8");
+        }
+        catch (error) {
+            warnings.push(`could not write the GitHub job summary: ${error instanceof Error ? error.message : String(error)}`);
+        }
     }
-    for (const annotation of renderGitHubAnnotations(report)) {
-        options.writeCommand(annotation);
-    }
+    return warnings;
 }
 //# sourceMappingURL=github.js.map

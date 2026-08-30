@@ -18,4 +18,26 @@ if (
   throw new Error(`Unexpected action smoke report: ${JSON.stringify(report.summary)}`);
 }
 
+if (process.env.GITHUB_ACTIONS === "true") {
+  const outputs = {
+    reportDirectory: process.env.SNIPPET_FIDELITY_REPORT_DIRECTORY,
+    outcome: process.env.SNIPPET_FIDELITY_OUTCOME,
+    total: process.env.SNIPPET_FIDELITY_TOTAL,
+    passed: process.env.SNIPPET_FIDELITY_PASSED,
+    failed: process.env.SNIPPET_FIDELITY_FAILED,
+    errors: process.env.SNIPPET_FIDELITY_ERRORS,
+  };
+  const expected = {
+    reportDirectory: "artifacts/action-smoke",
+    outcome: "passed",
+    total: "1",
+    passed: "1",
+    failed: "0",
+    errors: "0",
+  };
+  if (JSON.stringify(outputs) !== JSON.stringify(expected)) {
+    throw new Error(`Unexpected action outputs: ${JSON.stringify(outputs)}`);
+  }
+}
+
 process.stdout.write(`Verified GitHub Action report at ${reportPath}.\n`);

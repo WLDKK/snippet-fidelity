@@ -36,17 +36,32 @@ outputs:
   report-directory:
     description: Directory containing the generated reports.
     value: ${{ steps.audit.outputs.report-directory }}
+  outcome:
+    description: Audit outcome, either passed or failed.
+    value: ${{ steps.audit.outputs.outcome }}
+  total:
+    description: Total number of checks.
+    value: ${{ steps.audit.outputs.total }}
+  passed:
+    description: Number of passing checks.
+    value: ${{ steps.audit.outputs.passed }}
+  failed:
+    description: Number of fidelity mismatches.
+    value: ${{ steps.audit.outputs.failed }}
+  errors:
+    description: Number of page, selector, or probe errors.
+    value: ${{ steps.audit.outputs.errors }}
 
 runs:
   using: composite
   steps:
     - name: Set up pnpm
-      uses: pnpm/action-setup@v4
+      uses: pnpm/action-setup@b906affcce14559ad1aafd4ab0e942779e9f58b1 # v4
       with:
         version: 10.18.0
 
     - name: Set up Node.js
-      uses: actions/setup-node@v4
+      uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
       with:
         node-version: 24
 
@@ -55,7 +70,7 @@ runs:
       working-directory: ${{ github.action_path }}
       run: |
         set -euo pipefail
-        pnpm install --prod --frozen-lockfile
+        pnpm install --prod --frozen-lockfile --ignore-scripts
         node node_modules/playwright/cli.js install --with-deps chromium
 
     - name: Audit documentation copy controls
@@ -67,6 +82,7 @@ runs:
         SNIPPET_FIDELITY_OUTPUT_DIR: ${{ inputs.output-dir }}
         SNIPPET_FIDELITY_REPORTERS: ${{ inputs.reporters }}
         SNIPPET_FIDELITY_TIMEOUT: ${{ inputs.timeout }}
+        SNIPPET_FIDELITY_GITHUB_ACTION: "true"
         SNIPPET_FIDELITY_GITHUB_SUMMARY: ${{ inputs.github-summary }}
       run: |
         set -euo pipefail

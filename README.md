@@ -3,10 +3,17 @@
 [![CI](https://github.com/WLDKK/snippet-fidelity/actions/workflows/ci.yml/badge.svg)](https://github.com/WLDKK/snippet-fidelity/actions/workflows/ci.yml)
 [![GitHub release](https://img.shields.io/github/v/release/WLDKK/snippet-fidelity)](https://github.com/WLDKK/snippet-fidelity/releases)
 [![npm](https://img.shields.io/npm/v/snippet-fidelity)](https://www.npmjs.com/package/snippet-fidelity)
+[![GitHub Marketplace](https://img.shields.io/badge/Marketplace-Snippet%20Fidelity-2f81f7?logo=github)](https://github.com/marketplace/actions/snippet-fidelity)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
+**Catch invisible copy-button corruption before users paste broken commands from your docs.**
+
 Snippet Fidelity checks whether a rendered documentation site's **Copy code** controls preserve the
-text maintainers intended to ship.
+exact text maintainers intended to ship.
+
+[Try one URL](#try-it-in-one-workflow-step) · [Add a source-aware gate](#github-action) ·
+[Understand the evidence](#evidence-levels) ·
+[Read the upstream case study](docs/upstream-case-obsidian-webpage-export-2026-08-27.md)
 
 It drives a real Chromium page, clicks a real copy control, records the
 `navigator.clipboard.writeText` payload when available, reads the browser clipboard, and compares
@@ -30,6 +37,33 @@ full snippet by default. See [Development](#development) for the complete verifi
 
 > Project status: public pre-release (`v0.2.0`). The evidence model is usable, but the API may
 > change while the conformance contract is being validated.
+
+## Try it in one workflow step
+
+Run a real Chromium audit against any public documentation URL—no checkout or configuration file
+required:
+
+```yaml
+name: snippet-fidelity
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: WLDKK/snippet-fidelity@v0
+        with:
+          url: https://docs.example.com/
+```
+
+The workflow summary lists every discovered copy control and highlights fidelity failures. URL mode
+uses the rendered code block as its expected text, so treat it as reconnaissance. For release gates,
+continue with a checked-in canonical source below.
 
 ## Why this is different
 
@@ -89,7 +123,7 @@ For source-aware checks, create `snippet-fidelity.config.json`:
 
 ```json
 {
-  "$schema": "./node_modules/snippet-fidelity/schema/config.schema.json",
+  "$schema": "https://raw.githubusercontent.com/WLDKK/snippet-fidelity/v0/schema/config.schema.json",
   "version": 1,
   "baseUrl": "https://docs.example.com/",
   "pages": [
@@ -133,7 +167,9 @@ and pinning guidance.
 
 The action publishes a Markdown job summary and one GitHub error annotation per non-passing check by
 default, so reviewers can see the failure category and first differing code point without opening
-raw logs. This can be disabled with `github-summary: false`.
+raw logs. It also exposes `outcome`, `total`, `passed`, `failed`, and `errors` outputs for
+downstream workflow steps. UI publishing can be disabled with `github-summary: false` without
+disabling these outputs.
 
 On PowerShell, put the command on one line or use PowerShell's backtick continuation character.
 
@@ -174,6 +210,17 @@ one button; ambiguous selectors fail safely.
   reported as observed rather than normalized away.
 - Automatic discovery uses heuristics. Explicit selectors are required for a dependable release
   gate.
+
+## Support
+
+- Use the
+  [bug report form](https://github.com/WLDKK/snippet-fidelity/issues/new?template=bug_report.yml)
+  for incorrect results or crashes.
+- Use the
+  [feature request form](https://github.com/WLDKK/snippet-fidelity/issues/new?template=feature_request.yml)
+  for focused additions to the fidelity contract.
+- Report vulnerabilities privately through
+  [GitHub Security Advisories](https://github.com/WLDKK/snippet-fidelity/security/advisories/new).
 
 ## Development
 

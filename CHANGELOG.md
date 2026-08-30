@@ -8,6 +8,10 @@ All notable changes will be documented in this file.
 
 - GitHub Actions now publish a Markdown job summary and escaped error annotations for every
   non-passing fidelity check, with an opt-out input for callers that want file-only reports.
+- The composite Action exposes outcome and check-count outputs, keeps audit exit codes authoritative
+  when GitHub UI files are unavailable, and pins internal actions to immutable commits.
+- A zero-configuration URL reconnaissance example, hosted JSON Schema, and automated dependency
+  maintenance improve onboarding and long-term reliability.
 
 ## [0.2.0] - 2026-08-26
 

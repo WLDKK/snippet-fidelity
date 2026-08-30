@@ -5,7 +5,8 @@ import type { AuditReport, CheckResult, ProbeResult } from "./types.js";
 
 export interface GitHubResultOptions {
   summaryPath: string | undefined;
-  writeCommand: (value: string) => void;
+  outputPath: string | undefined;
+  writeCommand: ((value: string) => void) | undefined;
 }
 
 function escapeCommandData(value: string): string {
@@ -55,12 +56,49 @@ export function renderGitHubAnnotations(report: AuditReport): string[] {
 export async function publishGitHubResult(
   report: AuditReport,
   options: GitHubResultOptions,
-): Promise<void> {
-  if (options.summaryPath !== undefined && options.summaryPath !== "") {
-    await appendFile(options.summaryPath, `${renderMarkdown(report)}\n`, "utf8");
+): Promise<string[]> {
+  const warnings: string[] = [];
+
+  if (options.outputPath !== undefined && options.outputPath !== "") {
+    const outcome = report.summary.failed > 0 || report.summary.errors > 0 ? "failed" : "passed";
+    const output = [
+      `outcome=${outcome}`,
+      `total=${report.summary.total}`,
+      `passed=${report.summary.passed}`,
+      `failed=${report.summary.failed}`,
+      `errors=${report.summary.errors}`,
+      "",
+    ].join("\n");
+    try {
+      await appendFile(options.outputPath, output, "utf8");
+    } catch (error) {
+      warnings.push(
+        `could not write GitHub Action outputs: ${error instanceof Error ? error.message : String(error)}`,
+      );
+    }
   }
 
-  for (const annotation of renderGitHubAnnotations(report)) {
-    options.writeCommand(annotation);
+  if (options.writeCommand !== undefined) {
+    for (const annotation of renderGitHubAnnotations(report)) {
+      try {
+        options.writeCommand(annotation);
+      } catch (error) {
+        warnings.push(
+          `could not write a GitHub annotation: ${error instanceof Error ? error.message : String(error)}`,
+        );
+      }
+    }
   }
+
+  if (options.summaryPath !== undefined && options.summaryPath !== "") {
+    try {
+      await appendFile(options.summaryPath, `${renderMarkdown(report)}\n`, "utf8");
+    } catch (error) {
+      warnings.push(
+        `could not write the GitHub job summary: ${error instanceof Error ? error.message : String(error)}`,
+      );
+    }
+  }
+
+  return warnings;
 }

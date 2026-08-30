@@ -13,11 +13,11 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
-      - uses: actions/checkout@v4
-      - uses: pnpm/action-setup@v4
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      - uses: pnpm/action-setup@b906affcce14559ad1aafd4ab0e942779e9f58b1 # v4
         with:
           version: 10.18.0
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
         with:
           node-version: 24
           cache: pnpm
@@ -32,9 +32,17 @@ jobs:
           node scripts/serve-fixture.mjs > "$RUNNER_TEMP/snippet-fidelity-fixture.log" 2>&1 &
           curl --fail --retry 20 --retry-connrefused --retry-delay 1 http://127.0.0.1:4173/
       - name: Exercise the repository as an action
+        id: action-smoke
         uses: ./
         with:
           config: examples/action-smoke.config.json
           output-dir: artifacts/action-smoke
       - name: Verify the action report contract
+        env:
+          SNIPPET_FIDELITY_REPORT_DIRECTORY: ${{ steps.action-smoke.outputs.report-directory }}
+          SNIPPET_FIDELITY_OUTCOME: ${{ steps.action-smoke.outputs.outcome }}
+          SNIPPET_FIDELITY_TOTAL: ${{ steps.action-smoke.outputs.total }}
+          SNIPPET_FIDELITY_PASSED: ${{ steps.action-smoke.outputs.passed }}
+          SNIPPET_FIDELITY_FAILED: ${{ steps.action-smoke.outputs.failed }}
+          SNIPPET_FIDELITY_ERRORS: ${{ steps.action-smoke.outputs.errors }}
         run: node scripts/verify-action-report.mjs artifacts/action-smoke/snippet-fidelity.json

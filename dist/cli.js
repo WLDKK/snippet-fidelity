@@ -128,11 +128,15 @@ export async function runCli(args, io = DEFAULT_IO) {
             for (const path of paths)
                 io.stdout(`Report: ${path}\n`);
         }
-        if (process.env.SNIPPET_FIDELITY_GITHUB_SUMMARY === "true") {
-            await publishGitHubResult(report, {
-                summaryPath: process.env.GITHUB_STEP_SUMMARY,
-                writeCommand: io.stdout,
+        if (process.env.SNIPPET_FIDELITY_GITHUB_ACTION === "true") {
+            const publishSummary = process.env.SNIPPET_FIDELITY_GITHUB_SUMMARY === "true";
+            const warnings = await publishGitHubResult(report, {
+                summaryPath: publishSummary ? process.env.GITHUB_STEP_SUMMARY : undefined,
+                outputPath: process.env.GITHUB_OUTPUT,
+                writeCommand: publishSummary ? io.stdout : undefined,
             });
+            for (const warning of warnings)
+                io.stderr(`Warning: ${warning}\n`);
         }
         return report.summary.failed > 0 || report.summary.errors > 0 ? 1 : 0;
     }
