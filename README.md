@@ -14,6 +14,20 @@ both observations at Unicode code-point precision. It detects changes such as te
 indentation loss, tab/space substitution, invisible characters, punctuation substitution, and
 Unicode normalization.
 
+![Snippet Fidelity catches copy-button regressions](docs/assets/snippet-fidelity-proof.svg)
+
+The image above comes from the repository's synthetic adversarial fixture, not a claimed production
+incident. Run it locally to reproduce one passing control and five intentional clipboard failures:
+
+```shell
+pnpm fixture
+# In another terminal:
+node dist/cli.js audit --config examples/adversarial-fixture.config.json
+```
+
+The audit reports the failure category and first differing Unicode code point without printing the
+full snippet by default. See [Development](#development) for the complete verification gate.
+
 > Project status: public pre-release (`v0.2.0`). The evidence model is usable, but the API may
 > change while the conformance contract is being validated.
 
