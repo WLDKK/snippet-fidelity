@@ -4,6 +4,17 @@ All notable changes will be documented in this file.
 
 ## [Unreleased]
 
+## [0.3.0] - 2026-08-30
+
+### Added
+
+- GitHub Actions now publish a Markdown job summary and escaped error annotations for every
+  non-passing fidelity check, with an opt-out input for callers that want file-only reports.
+- The composite Action exposes outcome and check-count outputs, keeps audit exit codes authoritative
+  when GitHub UI files are unavailable, and pins internal actions to immutable commits.
+- A zero-configuration URL reconnaissance example, hosted JSON Schema, and automated dependency
+  maintenance improve onboarding and long-term reliability.
+
 ## [0.2.0] - 2026-08-26
 
 ### Added
@@ -36,6 +47,7 @@ All notable changes will be documented in this file.
 - Adversarial end-to-end fixture corpus.
 - Bounded discovery retries for documentation controls rendered after the page load event.
 
-[Unreleased]: https://github.com/WLDKK/snippet-fidelity/compare/v0.2.0...HEAD
+[Unreleased]: https://github.com/WLDKK/snippet-fidelity/compare/v0.3.0...HEAD
+[0.3.0]: https://github.com/WLDKK/snippet-fidelity/compare/v0.2.0...v0.3.0
 [0.2.0]: https://github.com/WLDKK/snippet-fidelity/compare/v0.1.0...v0.2.0
 [0.1.0]: https://github.com/WLDKK/snippet-fidelity/releases/tag/v0.1.0
