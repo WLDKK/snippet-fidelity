@@ -6,7 +6,7 @@ const report = JSON.parse(await readFile(reportPath, "utf8"));
 
 if (
   report.tool?.name !== "snippet-fidelity" ||
-  report.tool?.version !== "0.3.0" ||
+  report.tool?.version !== "0.4.0" ||
   report.summary?.total !== 1 ||
   report.summary?.passed !== 1 ||
   report.summary?.failed !== 0 ||

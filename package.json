@@ -1,6 +1,6 @@
 {
   "name": "snippet-fidelity",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "description": "Source-to-clipboard fidelity checks for rendered documentation code blocks.",
   "type": "module",
   "bin": {
