@@ -1,1 +1,1 @@
-{"version":3,"file":"markdown.d.ts","sourceRoot":"","sources":["../../src/reporters/markdown.ts"],"names":[],"mappings":"AAAA,OAAO,KAAK,EAAE,WAAW,EAA4B,MAAM,aAAa,CAAC;AA8BzE,wBAAgB,cAAc,CAAC,MAAM,EAAE,WAAW,GAAG,MAAM,CAqC1D"}
+{"version":3,"file":"markdown.d.ts","sourceRoot":"","sources":["../../src/reporters/markdown.ts"],"names":[],"mappings":"AAAA,OAAO,KAAK,EACV,WAAW,EAKZ,MAAM,aAAa,CAAC;AA2DrB,wBAAgB,cAAc,CAAC,MAAM,EAAE,WAAW,GAAG,MAAM,CAqC1D"}

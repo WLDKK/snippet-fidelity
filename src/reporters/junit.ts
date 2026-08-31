@@ -11,6 +11,22 @@ function escapeXml(value: string): string {
 
 function checkMessage(check: CheckResult): string {
   if (check.error !== null) return check.error;
+  if (check.evidenceGraph !== null && check.evidenceGraph !== undefined) {
+    return check.evidenceGraph.comparisons
+      .filter((comparison) => comparison.required && comparison.status !== "exact")
+      .flatMap((comparison) => {
+        const label = `${comparison.from} -> ${comparison.to}`;
+        if (comparison.status === "not-comparable") {
+          return [`${label}: ${comparison.detail ?? "not comparable"}`];
+        }
+        return (
+          comparison.comparison?.findings.map((finding) => `${label}: ${finding.message}`) ?? [
+            `${label}: mismatch`,
+          ]
+        );
+      })
+      .join("\n");
+  }
   return check.probes
     .filter((probe) => !probe.available || probe.comparison?.exact === false)
     .flatMap((probe) => {

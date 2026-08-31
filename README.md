@@ -95,6 +95,13 @@ Snippet Fidelity labels evidence instead of presenting every check as equivalent
 Use an explicit configuration for release gates. Direct URL discovery is useful for reconnaissance
 and regression triage.
 
+Each check also emits a versioned **proof graph** with four fixed stages: canonical source, rendered
+DOM, handler payload, and browser clipboard. A stage is labeled `available`, `unavailable`, or
+`not-observed`; every stage pair has an `exact`, `mismatch`, or `not-comparable` edge. Current
+runtime checks observe either canonical source or rendered DOM as their baseline, plus the available
+copy probes. This makes optional capability gaps and handler-to-clipboard transformations visible
+without claiming that an unobserved stage passed.
+
 ## Quick start
 
 Requirements: Node.js 22 or newer and Chromium. Install the package and browser:

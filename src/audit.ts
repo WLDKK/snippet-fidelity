@@ -5,6 +5,7 @@ import { chromium, type BrowserContext, type Page } from "playwright";
 
 import { compareText, fingerprintText } from "./compare.js";
 import { resolveExpectedFile, resolvePageUrl } from "./config.js";
+import { buildEvidenceGraph, statusFromEvidenceGraph } from "./evidence.js";
 import type {
   AuditConfig,
   AuditOptions,
@@ -13,6 +14,7 @@ import type {
   CheckResult,
   DiscoveryConfig,
   EvidenceSource,
+  EvidenceStage,
   ExpectedConfig,
   ProbeKind,
   ProbeMode,
@@ -94,15 +96,6 @@ function requiredProbeKinds(mode: ProbeMode): ProbeKind[] {
   if (mode === "handler") return ["handler-payload"];
   if (mode === "both") return ["handler-payload", "browser-clipboard"];
   return ["browser-clipboard"];
-}
-
-function statusFromProbes(mode: ProbeMode, probes: ProbeResult[]): CheckResult["status"] {
-  const required = requiredProbeKinds(mode).map((kind) =>
-    probes.find((probe) => probe.kind === kind),
-  );
-  if (required.some((probe) => probe === undefined || !probe.available)) return "error";
-  if (required.some((probe) => probe?.comparison?.exact === false)) return "failed";
-  return "passed";
 }
 
 function errorMessage(error: unknown): string {
@@ -367,6 +360,59 @@ async function runCheck(page: Page, pageUrl: string, check: ResolvedCheck): Prom
     source: check.expectedSource,
     fingerprint: fingerprintText(check.expectedText),
   };
+  const baseline: EvidenceStage =
+    check.expectedSource === "rendered-dom" ? "rendered-dom" : "canonical-source";
+  const requiredKinds = new Set(requiredProbeKinds(check.probe));
+  const buildGraph = (capture: ProbeCapture | null, captureError: string | null) =>
+    buildEvidenceGraph(
+      [
+        {
+          stage: "canonical-source",
+          state: baseline === "canonical-source" ? "available" : "not-observed",
+          required: baseline === "canonical-source",
+          source: baseline === "canonical-source" ? check.expectedSource : null,
+          text: baseline === "canonical-source" ? check.expectedText : null,
+          detail:
+            baseline === "canonical-source"
+              ? null
+              : "No canonical source was supplied; rendered DOM is the comparison baseline.",
+        },
+        {
+          stage: "rendered-dom",
+          state: baseline === "rendered-dom" ? "available" : "not-observed",
+          required: baseline === "rendered-dom",
+          source: baseline === "rendered-dom" ? "rendered-dom" : null,
+          text: baseline === "rendered-dom" ? check.expectedText : null,
+          detail:
+            baseline === "rendered-dom"
+              ? null
+              : "Rendered DOM was not configured as an independent observation.",
+        },
+        {
+          stage: "handler-payload",
+          state:
+            capture?.handlerText !== null && capture?.handlerText !== undefined
+              ? "available"
+              : "unavailable",
+          required: requiredKinds.has("handler-payload"),
+          source: null,
+          text: capture?.handlerText ?? null,
+          detail: captureError ?? capture?.handlerError ?? "Handler payload was not captured.",
+        },
+        {
+          stage: "browser-clipboard",
+          state:
+            capture?.clipboardText !== null && capture?.clipboardText !== undefined
+              ? "available"
+              : "unavailable",
+          required: requiredKinds.has("browser-clipboard"),
+          source: null,
+          text: capture?.clipboardText ?? null,
+          detail: captureError ?? capture?.clipboardError ?? "Browser clipboard was not captured.",
+        },
+      ],
+      baseline,
+    );
   try {
     const capture = await captureCopy(page, check.button, check.probe, check.timeoutMs);
     const probes = [
@@ -378,17 +424,21 @@ async function runCheck(page: Page, pageUrl: string, check: ResolvedCheck): Prom
         capture.clipboardError,
       ),
     ];
+    const evidenceGraph = buildGraph(capture, null);
     return {
       id: check.id,
       pageUrl,
       buttonSelector: check.button,
-      status: statusFromProbes(check.probe, probes),
+      status: statusFromEvidenceGraph(evidenceGraph),
       expected,
       probes,
+      evidenceGraph,
       error: null,
       durationMs: Math.round(performance.now() - startedAt),
     };
   } catch (error) {
+    const message = errorMessage(error);
+    const evidenceGraph = buildGraph(null, `Capture failed: ${message}`);
     return {
       id: check.id,
       pageUrl,
@@ -396,7 +446,8 @@ async function runCheck(page: Page, pageUrl: string, check: ResolvedCheck): Prom
       status: "error",
       expected,
       probes: [],
-      error: errorMessage(error),
+      evidenceGraph,
+      error: message,
       durationMs: Math.round(performance.now() - startedAt),
     };
   }
@@ -415,6 +466,7 @@ function pageErrorResult(
     status: "error",
     expected: null,
     probes: [],
+    evidenceGraph: null,
     error: errorMessage(error),
     durationMs: Math.round(performance.now() - startedAt),
   };
