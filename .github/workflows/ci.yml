@@ -37,6 +37,10 @@ jobs:
         run: |
           node scripts/serve-fixture.mjs > "$RUNNER_TEMP/snippet-fidelity-fixture.log" 2>&1 &
           curl --fail --retry 20 --retry-connrefused --retry-delay 1 http://127.0.0.1:4173/
+      - name: Remove the development install before the Action smoke test
+        if: matrix.node-version == 24
+        shell: bash
+        run: rm -rf node_modules
       - name: Exercise the repository as an action
         if: matrix.node-version == 24
         id: action-smoke

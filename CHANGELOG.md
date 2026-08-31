@@ -11,6 +11,8 @@ All notable changes will be documented in this file.
 - The composite Action reuses a lockfile-keyed pnpm store cache when GitHub's cache service is
   available while continuing to install its locked dependencies and Chromium in an isolated action
   directory.
+- The Action smoke test now removes the development dependency tree before invoking the composite
+  Action, proving that its runtime installation is self-contained.
 - Compatibility documentation now distinguishes the standalone Node.js range from the Action's
   provisioned runtime and identifies Chromium as the only browser supported in the current line.
 

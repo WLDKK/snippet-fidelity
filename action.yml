@@ -71,8 +71,8 @@ runs:
       run: |
         set -euo pipefail
         lock_hash="$(sha256sum "$GITHUB_ACTION_PATH/pnpm-lock.yaml" | cut -d ' ' -f 1)"
-        echo "store_path=$(pnpm store path --silent)" >> "$GITHUB_OUTPUT"
-        echo "cache_key=snippet-fidelity-pnpm-$RUNNER_OS-$RUNNER_ARCH-$lock_hash" >> "$GITHUB_OUTPUT"
+        echo "store_path=$RUNNER_TEMP/snippet-fidelity-pnpm-store" >> "$GITHUB_OUTPUT"
+        echo "cache_key=snippet-fidelity-pnpm-v1-$RUNNER_OS-$RUNNER_ARCH-$lock_hash" >> "$GITHUB_OUTPUT"
 
     - name: Restore the pnpm store
       uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
@@ -83,9 +83,11 @@ runs:
     - name: Install the locked runtime
       shell: bash
       working-directory: ${{ github.action_path }}
+      env:
+        SNIPPET_FIDELITY_PNPM_STORE: ${{ steps.runtime_cache.outputs.store_path }}
       run: |
         set -euo pipefail
-        pnpm install --prod --frozen-lockfile --ignore-scripts
+        pnpm install --prod --frozen-lockfile --ignore-scripts --store-dir "$SNIPPET_FIDELITY_PNPM_STORE"
         node node_modules/playwright/cli.js install --with-deps chromium
 
     - name: Audit documentation copy controls
