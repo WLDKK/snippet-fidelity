@@ -1,0 +1,59 @@
+name: Request a public documentation audit
+description: Nominate a public documentation URL for bounded copy-button fidelity reconnaissance.
+title: "[Audit]: "
+labels:
+  - audit-request
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for nominating a documentation page. Public audits inspect copy controls near code blocks in automated Chromium. Copied text is observed but never executed. Results and limitations are public so maintainers can review the evidence.
+
+        Do not submit private, authenticated, paywalled, or proprietary pages.
+  - type: input
+    id: url
+    attributes:
+      label: Public documentation URL
+      description:
+        Link directly to the page that contains one or more code blocks with copy controls.
+      placeholder: https://docs.example.com/getting-started/
+    validations:
+      required: true
+  - type: input
+    id: framework
+    attributes:
+      label: Documentation framework
+      description:
+        Optional. For example, Docusaurus, Starlight, Material for MkDocs, or a custom site.
+      placeholder: Docusaurus
+  - type: dropdown
+    id: goal
+    attributes:
+      label: Desired evidence
+      description:
+        Reconnaissance compares rendered code with copied text; a release gate also needs canonical
+        source.
+      options:
+        - Rendered-page reconnaissance
+        - Source-aware release gate
+        - Not sure yet
+    validations:
+      required: true
+  - type: textarea
+    id: canonical
+    attributes:
+      label: Canonical source location
+      description:
+        Optional. Link to the repository file or explain what text maintainers intend users to copy.
+      placeholder: https://github.com/owner/repository/blob/main/docs/snippets/install.sh
+  - type: checkboxes
+    id: consent
+    attributes:
+      label: Public audit checks
+      options:
+        - label: The page is public and does not require authentication.
+          required: true
+        - label:
+            I understand that automated Chromium will inspect the page and activate its code-copy
+            controls.
+          required: true

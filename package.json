@@ -1,7 +1,7 @@
 {
   "name": "snippet-fidelity",
   "version": "0.4.0",
-  "description": "Source-to-clipboard fidelity checks for rendered documentation code blocks.",
+  "description": "Test documentation copy buttons for newline, whitespace, Unicode, and clipboard corruption.",
   "type": "module",
   "bin": {
     "snippet-fidelity": "dist/cli.js"
@@ -42,9 +42,14 @@
   },
   "keywords": [
     "clipboard",
+    "copy-button",
     "documentation",
+    "documentation-testing",
+    "github-actions",
     "playwright",
     "testing",
+    "unicode",
+    "whitespace",
     "code-blocks"
   ],
   "author": "Lidong Wang",
