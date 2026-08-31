@@ -4,6 +4,8 @@ All notable changes will be documented in this file.
 
 ## [Unreleased]
 
+## [0.4.0] - 2026-08-31
+
 ### Added
 
 - Every resolved check now emits a versioned four-stage proof graph with explicit node availability,
@@ -65,7 +67,8 @@ All notable changes will be documented in this file.
 - Adversarial end-to-end fixture corpus.
 - Bounded discovery retries for documentation controls rendered after the page load event.
 
-[Unreleased]: https://github.com/WLDKK/snippet-fidelity/compare/v0.3.0...HEAD
+[Unreleased]: https://github.com/WLDKK/snippet-fidelity/compare/v0.4.0...HEAD
+[0.4.0]: https://github.com/WLDKK/snippet-fidelity/compare/v0.3.0...v0.4.0
 [0.3.0]: https://github.com/WLDKK/snippet-fidelity/compare/v0.2.0...v0.3.0
 [0.2.0]: https://github.com/WLDKK/snippet-fidelity/compare/v0.1.0...v0.2.0
 [0.1.0]: https://github.com/WLDKK/snippet-fidelity/releases/tag/v0.1.0
