@@ -10,8 +10,13 @@ permissions:
 
 jobs:
   verify:
+    name: verify (Node.js ${{ matrix.node-version }})
     runs-on: ubuntu-latest
     timeout-minutes: 15
+    strategy:
+      fail-fast: false
+      matrix:
+        node-version: [22, 24]
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - uses: pnpm/action-setup@0977fd99725f1db4007ccb2928dbb4e90d06cc86 # v6.0.10
@@ -19,7 +24,7 @@ jobs:
           version: 10.18.0
       - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
         with:
-          node-version: 24
+          node-version: ${{ matrix.node-version }}
           cache: pnpm
       - run: pnpm install --frozen-lockfile
       - run: pnpm exec playwright install --with-deps chromium
@@ -27,17 +32,20 @@ jobs:
       - name: Ensure the committed action build is current
         run: git diff --exit-code -- dist
       - name: Start the positive fixture
+        if: matrix.node-version == 24
         shell: bash
         run: |
           node scripts/serve-fixture.mjs > "$RUNNER_TEMP/snippet-fidelity-fixture.log" 2>&1 &
           curl --fail --retry 20 --retry-connrefused --retry-delay 1 http://127.0.0.1:4173/
       - name: Exercise the repository as an action
+        if: matrix.node-version == 24
         id: action-smoke
         uses: ./
         with:
           config: examples/action-smoke.config.json
           output-dir: artifacts/action-smoke
       - name: Verify the action report contract
+        if: matrix.node-version == 24
         env:
           SNIPPET_FIDELITY_REPORT_DIRECTORY: ${{ steps.action-smoke.outputs.report-directory }}
           SNIPPET_FIDELITY_OUTCOME: ${{ steps.action-smoke.outputs.outcome }}

@@ -4,6 +4,16 @@ All notable changes will be documented in this file.
 
 ## [Unreleased]
 
+### Changed
+
+- CI now verifies the CLI and library on both Node.js 22 and 24, and development Node types match
+  the minimum supported runtime line.
+- The composite Action reuses a lockfile-keyed pnpm store cache when GitHub's cache service is
+  available while continuing to install its locked dependencies and Chromium in an isolated action
+  directory.
+- Compatibility documentation now distinguishes the standalone Node.js range from the Action's
+  provisioned runtime and identifies Chromium as the only browser supported in the current line.
+
 ## [0.3.0] - 2026-08-30
 
 ### Added

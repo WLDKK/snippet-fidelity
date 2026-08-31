@@ -25,6 +25,10 @@ pnpm verify
 The compiled `dist/` tree is committed because tagged revisions are also consumed as a GitHub
 Action. Run `pnpm build` and include matching `dist/` changes when source code changes.
 
+CI runs the package tests on Node.js 22 and 24. Keep runtime APIs compatible with Node.js 22, which
+is the minimum version declared in `package.json`; the composite Action provisions Node.js 24 for
+its own execution.
+
 ## Change requirements
 
 - Add a failing fixture or test before fixing a fidelity-classification bug.
