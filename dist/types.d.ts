@@ -2,6 +2,9 @@ export type ProbeMode = "clipboard" | "handler" | "both";
 export type ProbeKind = "browser-clipboard" | "handler-payload";
 export type CheckStatus = "passed" | "failed" | "error";
 export type EvidenceSource = "canonical-text" | "canonical-file" | "rendered-dom";
+export type EvidenceStage = "canonical-source" | "rendered-dom" | "handler-payload" | "browser-clipboard";
+export type EvidenceNodeState = "available" | "unavailable" | "not-observed";
+export type EvidenceComparisonStatus = "exact" | "mismatch" | "not-comparable";
 export interface InlineExpectedConfig {
     text: string;
 }
@@ -97,6 +100,28 @@ export interface ExpectedEvidence {
     source: EvidenceSource;
     fingerprint: TextFingerprint;
 }
+export interface EvidenceNode {
+    stage: EvidenceStage;
+    state: EvidenceNodeState;
+    required: boolean;
+    source: EvidenceSource | null;
+    fingerprint: TextFingerprint | null;
+    detail: string | null;
+}
+export interface EvidenceComparison {
+    from: EvidenceStage;
+    to: EvidenceStage;
+    required: boolean;
+    status: EvidenceComparisonStatus;
+    comparison: TextComparison | null;
+    detail: string | null;
+}
+export interface EvidenceGraph {
+    version: 1;
+    baseline: EvidenceStage;
+    nodes: EvidenceNode[];
+    comparisons: EvidenceComparison[];
+}
 export interface CheckResult {
     id: string;
     pageUrl: string;
@@ -104,6 +129,7 @@ export interface CheckResult {
     status: CheckStatus;
     expected: ExpectedEvidence | null;
     probes: ProbeResult[];
+    evidenceGraph?: EvidenceGraph | null;
     error: string | null;
     durationMs: number;
 }

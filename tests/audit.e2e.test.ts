@@ -58,6 +58,9 @@ describe("browser audit", () => {
       expect(check.expected?.source).toBe("canonical-text");
       expect(check.probes).toHaveLength(2);
       expect(check.probes.every((probe) => probe.available)).toBe(true);
+      expect(check.evidenceGraph).toMatchObject({ version: 1, baseline: "canonical-source" });
+      expect(check.evidenceGraph?.nodes).toHaveLength(4);
+      expect(check.evidenceGraph?.comparisons).toHaveLength(6);
     }
 
     const findings = Object.fromEntries(
@@ -89,6 +92,9 @@ describe("browser audit", () => {
     expect(report.summary).toEqual({ total: 6, passed: 1, failed: 5, errors: 0 });
     expect(report.checks.map((check) => check.id)).toEqual(Object.keys(corpus));
     expect(report.checks.every((check) => check.expected?.source === "rendered-dom")).toBe(true);
+    expect(report.checks.every((check) => check.evidenceGraph?.baseline === "rendered-dom")).toBe(
+      true,
+    );
   });
 
   it("ignores copy controls inside hidden code blocks", async () => {

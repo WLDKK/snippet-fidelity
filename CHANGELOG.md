@@ -4,6 +4,12 @@ All notable changes will be documented in this file.
 
 ## [Unreleased]
 
+### Added
+
+- Every resolved check now emits a versioned four-stage proof graph with explicit node availability,
+  all six pairwise comparison edges, and required-versus-informational status semantics while
+  preserving the existing expected and probe report fields.
+
 ### Changed
 
 - CI now verifies the CLI and library on both Node.js 22 and 24, and development Node types match

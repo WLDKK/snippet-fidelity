@@ -1,1 +1,1 @@
-{"version":3,"file":"junit.d.ts","sourceRoot":"","sources":["../../src/reporters/junit.ts"],"names":[],"mappings":"AAAA,OAAO,KAAK,EAAE,WAAW,EAAe,MAAM,aAAa,CAAC;AAoC5D,wBAAgB,WAAW,CAAC,MAAM,EAAE,WAAW,GAAG,MAAM,CASvD"}
+{"version":3,"file":"junit.d.ts","sourceRoot":"","sources":["../../src/reporters/junit.ts"],"names":[],"mappings":"AAAA,OAAO,KAAK,EAAE,WAAW,EAAe,MAAM,aAAa,CAAC;AAoD5D,wBAAgB,WAAW,CAAC,MAAM,EAAE,WAAW,GAAG,MAAM,CASvD"}

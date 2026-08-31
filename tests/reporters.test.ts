@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 
 import { fingerprintText } from "../src/compare.js";
+import { buildEvidenceGraph } from "../src/evidence.js";
 import { renderJson, renderJunit, renderMarkdown } from "../src/reporters/index.js";
 import type { AuditReport } from "../src/types.js";
 
@@ -41,6 +42,27 @@ const report: AuditReport = {
           error: null,
         },
       ],
+      evidenceGraph: buildEvidenceGraph(
+        [
+          {
+            stage: "canonical-source",
+            state: "available",
+            required: true,
+            source: "canonical-text",
+            text: "secret-example",
+            detail: null,
+          },
+          {
+            stage: "browser-clipboard",
+            state: "available",
+            required: true,
+            source: null,
+            text: "secret-example\n",
+            detail: null,
+          },
+        ],
+        "canonical-source",
+      ),
       error: null,
       durationMs: 25,
     },
@@ -58,12 +80,15 @@ describe("reporters", () => {
     const output = renderMarkdown(report);
     expect(output).toContain("| 1 | 0 | 1 | 0 |");
     expect(output).toContain("terminal-line-breaks-changed");
+    expect(output).toContain("canonical-source; 2/4 nodes; 1/6 edges");
+    expect(output).toContain("canonical-source -> browser-clipboard (required)");
   });
 
   it("renders valid JUnit-shaped XML", () => {
     const output = renderJunit(report);
     expect(output).toContain('<testsuite name="snippet-fidelity" tests="1" failures="1"');
     expect(output).toContain("<failure");
+    expect(output).toContain("canonical-source -&gt; browser-clipboard");
     expect(output).toContain("</testsuite>");
   });
 });
