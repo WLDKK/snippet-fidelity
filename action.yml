@@ -1,5 +1,6 @@
 name: Snippet Fidelity
-description: Verify that documentation copy buttons preserve canonical code exactly.
+description:
+  Test documentation copy buttons for exact newlines, whitespace, Unicode, and clipboard fidelity.
 author: Lidong Wang
 
 branding:

@@ -11,8 +11,9 @@
 Snippet Fidelity checks whether a rendered documentation site's **Copy code** controls preserve the
 exact text maintainers intended to ship.
 
-[Try one URL](#try-it-in-one-workflow-step) · [Add a source-aware gate](#github-action) ·
-[Understand the evidence](#evidence-levels) ·
+[Try one URL](#try-it-in-one-workflow-step) ·
+[Request a public audit](https://github.com/WLDKK/snippet-fidelity/issues/new?template=audit_request.yml)
+· [Add a source-aware gate](#github-action) · [See real-world evidence](#real-world-evidence) ·
 [Read the upstream case study](docs/upstream-case-obsidian-webpage-export-2026-08-27.md)
 
 It drives a real Chromium page, clicks a real copy control, records the
@@ -37,6 +38,20 @@ full snippet by default. See [Development](#development) for the complete verifi
 
 > Project status: public pre-release (`v0.4.0`). The evidence model is usable, but the API may
 > change while the conformance contract is being validated.
+
+## Start with your docs
+
+Choose the smallest useful first step:
+
+- **Have a public documentation URL?**
+  [Request a public audit](https://github.com/WLDKK/snippet-fidelity/issues/new?template=audit_request.yml).
+  The audit is bounded to copy controls near code blocks, never executes copied text, and publishes
+  its evidence and limitations for review.
+- **Want a no-config CI check?** Add the workflow below. It uses the rendered code block as the
+  baseline and is best for reconnaissance and regression triage.
+- **Need a dependable release gate?** Check in a canonical snippet file and use the
+  [source-aware GitHub Action](#github-action) so source, rendered DOM, handler payload, and browser
+  clipboard are compared explicitly.
 
 ## Try it in one workflow step
 
@@ -65,6 +80,10 @@ The workflow summary lists every discovered copy control and highlights fidelity
 uses the rendered code block as its expected text, so treat it as reconnaissance. For release gates,
 continue with a checked-in canonical source below.
 
+If you would rather see the evidence before adding a workflow,
+[open an audit request](https://github.com/WLDKK/snippet-fidelity/issues/new?template=audit_request.yml)
+with a public page. Private or authenticated pages are intentionally out of scope for public audits.
+
 ## Why this is different
 
 Markdown linters inspect source. Documentation test runners execute examples. Clipboard libraries
@@ -82,6 +101,21 @@ such as [Doc Detective](https://github.com/doc-detective/doc-detective). For low
 fixtures inside an existing Playwright suite, consider
 [Playwright Clipboard](https://github.com/vrknetha/playwright-clipboard). Snippet Fidelity stays
 narrow: reusable source-to-copy evidence for rendered documentation code blocks.
+
+## Real-world evidence
+
+- A [public-site pilot](docs/pilot-study-2026-08-26.md) exercised three maintained documentation
+  sites. Astro Starlight passed three discovered checks; Material for MkDocs and Doc Detective
+  exposed consistent rendered-DOM transformations that may be intentional. The report treats them as
+  reconnaissance findings, not defect claims.
+- An [Obsidian Webpage Export case](docs/upstream-case-obsidian-webpage-export-2026-08-27.md) uses a
+  source-aware audit to validate a fix for a real reported copy-button failure. The upstream pull
+  request remains open, so this is evidence for the proposed fix—not a claim of adoption.
+- The repository's adversarial fixture keeps one passing control beside five deliberate failures,
+  making newline, indentation, whitespace, punctuation, and Unicode regressions reproducible.
+
+These examples also show the project's reporting rule: an observed mismatch is not automatically a
+bug. A release-blocking claim requires a maintainer-owned canonical source contract.
 
 ## Evidence levels
 
@@ -209,7 +243,7 @@ one button; ambiguous selectors fail safely.
 
 ## Current limitations
 
-- Chromium is the only supported browser in `0.3.x`.
+- Chromium is the only supported browser in `0.4.x`.
 - The composite GitHub Action is validated on Linux GitHub-hosted runners. The standalone CLI and
   library are the supported integration path for other environments.
 - Copy implementations that do not use `navigator.clipboard.writeText` can still be tested through
@@ -228,6 +262,9 @@ one button; ambiguous selectors fail safely.
 - Use the
   [feature request form](https://github.com/WLDKK/snippet-fidelity/issues/new?template=feature_request.yml)
   for focused additions to the fidelity contract.
+- Use the
+  [public audit request](https://github.com/WLDKK/snippet-fidelity/issues/new?template=audit_request.yml)
+  to nominate a public documentation page for bounded reconnaissance.
 - Report vulnerabilities privately through
   [GitHub Security Advisories](https://github.com/WLDKK/snippet-fidelity/security/advisories/new).
 
