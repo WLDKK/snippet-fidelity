@@ -92,5 +92,9 @@ The moving `v0` tag receives backward-compatible pre-1.0 updates. Pin the action
 SHA when your supply-chain policy requires immutable dependencies.
 
 The action installs the repository's locked production dependencies and Chromium in its own action
-directory. It does not add dependencies or lockfiles to the caller's repository, and copied code is
-never executed.
+directory. It reuses GitHub Actions' pnpm store cache when the cache service is available, but does
+not cache `node_modules` or assume that a browser binary is already present. It does not add
+dependencies or lockfiles to the caller's repository, and copied code is never executed. The Action
+itself provisions Node.js 24; the standalone CLI and library are also tested on the minimum
+supported Node.js 22 release line. The composite Action is validated on Linux GitHub-hosted runners;
+use the standalone CLI or library when integrating with other environments.

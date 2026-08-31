@@ -65,12 +65,29 @@ runs:
       with:
         node-version: 24
 
+    - name: Resolve the locked runtime cache
+      id: runtime_cache
+      shell: bash
+      run: |
+        set -euo pipefail
+        lock_hash="$(sha256sum "$GITHUB_ACTION_PATH/pnpm-lock.yaml" | cut -d ' ' -f 1)"
+        echo "store_path=$RUNNER_TEMP/snippet-fidelity-pnpm-store" >> "$GITHUB_OUTPUT"
+        echo "cache_key=snippet-fidelity-pnpm-v1-$RUNNER_OS-$RUNNER_ARCH-$lock_hash" >> "$GITHUB_OUTPUT"
+
+    - name: Restore the pnpm store
+      uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+      with:
+        path: ${{ steps.runtime_cache.outputs.store_path }}
+        key: ${{ steps.runtime_cache.outputs.cache_key }}
+
     - name: Install the locked runtime
       shell: bash
       working-directory: ${{ github.action_path }}
+      env:
+        SNIPPET_FIDELITY_PNPM_STORE: ${{ steps.runtime_cache.outputs.store_path }}
       run: |
         set -euo pipefail
-        pnpm install --prod --frozen-lockfile --ignore-scripts
+        pnpm install --prod --frozen-lockfile --ignore-scripts --store-dir "$SNIPPET_FIDELITY_PNPM_STORE"
         node node_modules/playwright/cli.js install --with-deps chromium
 
     - name: Audit documentation copy controls

@@ -202,7 +202,9 @@ one button; ambiguous selectors fail safely.
 
 ## Current limitations
 
-- Chromium is the only supported browser in `0.2.x`.
+- Chromium is the only supported browser in `0.3.x`.
+- The composite GitHub Action is validated on Linux GitHub-hosted runners. The standalone CLI and
+  library are the supported integration path for other environments.
 - Copy implementations that do not use `navigator.clipboard.writeText` can still be tested through
   the browser clipboard, but will not produce a handler-payload observation.
 - Source files are read as exact UTF-8 text. A final newline in the file is part of the contract.
