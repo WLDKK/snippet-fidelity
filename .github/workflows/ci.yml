@@ -16,7 +16,7 @@ jobs:
     env:
       # The composite smoke test reinstalls pnpm. Keep the development store
       # outside setup-pnpm so setup-node can still save it during post-job cleanup.
-      npm_config_store_dir: ${{ runner.temp }}/snippet-fidelity-dev-store
+      npm_config_store_dir: ${{ github.workspace }}/.pnpm-store
     strategy:
       fail-fast: false
       matrix:
